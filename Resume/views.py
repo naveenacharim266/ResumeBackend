@@ -20,19 +20,27 @@ def register_view(request):
         user = User.objects.create_user(username=username, email=email, password=password)
         return JsonResponse({'status': 'success', 'message': 'User registered successfully'}, status=201)
 
+
 @csrf_exempt
 def login_view(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        username = data.get('username')
-        password = data.get('password')
+        try:
+            data = json.loads(request.body)
+            username = data.get('username')
+            password = data.get('password')
 
-        user = authenticate(username=username, password=password)
+            user = authenticate(username=username, password=password)
 
-        if user:
-            return JsonResponse({'status': 'success', 'message': 'Login successful', 'user_id': user.id})
-        else:
-            return JsonResponse({'status': 'error', 'message': 'Invalid credentials'}, status=401)
+            if user:
+                return JsonResponse({'status': 'success', 'message': 'Login successful', 'user_id': user.id})
+            else:
+                return JsonResponse({'status': 'error', 'message': 'Invalid credentials'}, status=401)
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON format'}, status=400)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Only POST method allowed'}, status=405)
         
 def get_user_from_request(request, data=None):
     user_id = (
@@ -452,7 +460,7 @@ def AddEducation(request, id=None):
 def GetResumeData(request):
     if request.method == "GET":
         try:
-            user = User.objects.first()
+            user = request.GET.get('user_id')
             basic = BasicDetails.objects.filter(user=user).first()
             experiences = Experience.objects.filter(user=user).values()
             educations = Education.objects.filter(user=user).values()

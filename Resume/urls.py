@@ -17,28 +17,28 @@ from . import views
 urlpatterns = [
     
     path('register/', views.register_view),
-    path('login/', views.login_view),
+    path('login/', views.login_view, name='login'),
     
-    # BasicDetails CRUD
+    
     path('api/basicDetails/', views.AddBasicDetails, name='AddBasicDetails'),
     path('api/basicDetails/<int:id>/', views.AddBasicDetails, name='UpdateDeleteBasicDetails'),
 
-    # Experience CRUD
+    
     path('api/addExperience/', views.AddExperience, name='AddExperience'),
     path('api/addExperience/<int:id>/', views.AddExperience, name='UpdateDeleteExperience'),
 
-    # Project CRUD
+    
     path('api/addProjects/', views.AddProject, name='AddProject'),
     path('api/addProjects/<int:id>/', views.AddProject, name='UpdateDeleteProject'),
 
-    # Skills CRUD
+    
     path('api/addSkills/', views.skills_view, name='AddSkill'),
     path('api/addSkills/<int:id>/', views.skills_view, name='UpdateDeleteSkill'),
 
-    # Education CRUD
+    
     path('api/addEducation/', views.AddEducation, name='AddEducation'),
     path('api/addEducation/<int:id>/', views.AddEducation, name='UpdateDeleteEducation'),
 
-    # Final resume data
+    
     path('api/getResumeData/', views.GetResumeData, name='GetResumeData')
 ]
